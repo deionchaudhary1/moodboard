@@ -1,0 +1,103 @@
+Here’s your updated **ImageSlot.tsx** and **MoodboardGrid.tsx** integrated with MobileNet classification while keeping your existing transition logic and hooks:
+
+---
+
+### `ImageSlot.tsx`
+
+```tsx
+import { useEffect, useState, useRef } from "react";
+import { classifyToCategory } from "../hooks/useImageClassifier";
+
+type Props = {
+  src: string;
+};
+
+export default function ImageSlot({ src }: Props) {
+  const [displayedSrc, setDisplayedSrc] = useState(src);
+  const [visible, setVisible] = useState(true);
+  const [category, setCategory] = useState("loading");
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Transition effect when src changes
+  useEffect(() => {
+    if (src === displayedSrc) return;
+
+    setVisible(false);
+
+    const timeout = setTimeout(() => {
+      setDisplayedSrc(src);
+      setVisible(true);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [src, displayedSrc]);
+
+  // Run MobileNet classification when image changes
+  useEffect(() => {
+    if (!imgRef.current) return;
+
+    imgRef.current.onload = async () => {
+      const result = await classifyToCategory(imgRef.current!);
+      setCategory(result.category);
+    };
+  }, [displayedSrc]);
+
+  return (
+    <div className={`image-slot ${category}`}>
+      <img
+        ref={imgRef}
+        src={displayedSrc}
+        className={`image ${visible ? "fade-in" : "fade-out"}`}
+      />
+      <span className="category-label">{category}</span>
+    </div>
+  );
+}
+```
+
+---
+
+### `MoodboardGrid.tsx`
+
+```tsx
+import ImageSlot from "./ImageSlot";
+import { useShuffledImages } from "../hooks/useShuffledImages";
+import { useViewportGrid } from "../hooks/useViewportGrid";
+
+// Import images
+import img1 from "../assets/images/img1.jpg";
+import img2 from "../assets/images/img2.jpg";
+import img3 from "../assets/images/img3.jpg";
+import img4 from "../assets/images/img4.jpg";
+import img5 from "../assets/images/img5.jpg";
+import img6 from "../assets/images/img6.jpg";
+import img7 from "../assets/images/img7.jpg";
+import img8 from "../assets/images/img8.jpg";
+import img9 from "../assets/images/img9.jpg";
+import img10 from "../assets/images/img10.jpg";
+import img11 from "../assets/images/img11.jpg";
+import img12 from "../assets/images/img12.jpg";
+import img13 from "../assets/images/img13.jpg";
+
+const images = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13];
+
+export default function MoodboardGrid() {
+  const slotCount = useViewportGrid();
+
+  const visibleImages = useShuffledImages(
+    images,
+    slotCount,        // number of slots on screen
+    2500              // change every 2.5 seconds
+  );
+
+  return (
+    <div className="moodboard-grid">
+      {visibleImages.map((img, index) => (
+        <ImageSlot key={index} src={img} />
+      ))}
+    </div>
+  );
+}
+```
+
+This version keeps your **fade-in/fade-out transitions**, **slot shuffling**, and **viewport-based grid sizing**, while also adding **MobileNet classification** and displaying the resulting category on each image.

@@ -20,11 +20,12 @@ import img13 from "../assets/images/img13.jpg";
 const images = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, img12, img13];
 
 export default function MoodboardGrid() {
-const slotCount = useViewportGrid();
+  const slotCount = useViewportGrid();
+
   const visibleImages = useShuffledImages(
     images,
     slotCount,        // number of slots on screen
-    2500      // change every 2 seconds
+    2500              // change every 2.5 seconds
   );
 
   return (
