@@ -1,5 +1,22 @@
-import HomePage from "./pages/Homepage";
+import { useState } from "react";
+import MoodboardGrid from "./components/MoodboardGrid";
+import "./styles/moodboard.css";
+import BackgroundSelector from "./components/BackgroundSelector";
 
 export default function App() {
-  return <HomePage />;
+  const [bgColor, setBgColor] = useState("#111");
+
+  return (
+    <div
+      className="app-root"
+      style={{ backgroundColor: bgColor }}
+    >
+      <BackgroundSelector
+        value={bgColor}
+        onChange={setBgColor}
+      />
+
+      <MoodboardGrid />
+    </div>
+  );
 }

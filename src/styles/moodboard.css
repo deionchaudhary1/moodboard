@@ -50,3 +50,35 @@ html, body, #root {
     text-align: center;
     text-transform: lowercase;
 }
+
+.app-root {
+  min-height: 100vh;
+  transition: background-color 0.4s ease;
+}
+
+/* Selector UI */
+.bg-selector {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+
+.bg-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: transform 0.2s ease, border 0.2s ease;
+}
+
+.bg-swatch:hover {
+  transform: scale(1.1);
+}
+
+.bg-swatch.active {
+  border: 2px solid white;
+}
